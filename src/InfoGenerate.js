@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './App.css';
 
 function TableVal({ data }) {
-  const isValidationIncluded = data.hasOwnProperty('generation_and_validation');
+  const isValidationIncluded = Object.prototype.hasOwnProperty.call(data, 'generation_and_validation');
+
 
   return (
     <div>
