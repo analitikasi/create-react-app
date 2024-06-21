@@ -39,7 +39,7 @@ function InfoValidate() {
     setIsLoading(true); // Set isLoading to true when the request starts
 
     const formData = new FormData(event.target);
-    const response = await fetch('http://localhost:8080/api/v1/provider/info/openAi/validate', {
+    const response = await fetch('http://localhost:8080/api/v1/validate/documentation/openAi', {
       method: 'POST',
       body: formData
     })
@@ -52,9 +52,18 @@ function InfoValidate() {
 
   return (
     <div className="InfoValidate">
-      <header>
+      <div class="header">
         <h1>Provider Documentation Validation</h1>
-      </header>
+      </div>
+
+      <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/info/openAi/validate">Documentation Validate</a>
+        <a href="/info/openAi/generate">Documentation Generate</a>
+        <a href="/connector/openAi/generate">Connector Generate</a>
+        <a href="/generated/list">List Of Documentations</a>
+      </div>
+
       <form id="myForm" onSubmit={handleSubmit} encType="multipart/form-data">
         <label htmlFor="systemName"></label>
         <p>System name:<input type="text" id="systemName" name="name" /></p>

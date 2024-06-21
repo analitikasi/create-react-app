@@ -4,7 +4,7 @@ function ConnectorCode({ data }) {
   return (
     <div>
       <h2>Download Code</h2>
-      <form action={`http://localhost:8080/file/code/${data.name}`} method = "get">
+      <form action={`http://localhost:8080/api/v1/file/code/${data.name}`} method = "get">
         <button className="button" type="submit">Download Code</button>
       </form>
 
@@ -26,7 +26,7 @@ function ConnectorGenerate() {
     setIsLoading(true)
 
     const formData = new FormData(event.target);
-    const response = await fetch('http://localhost:8080/api/v1/provider/connector/openAi/generate', {
+    const response = await fetch('http://localhost:8080/api/v1/generate/code/openAi', {
       method: 'POST',
       body: formData
     })
@@ -37,9 +37,19 @@ function ConnectorGenerate() {
 
   }
   return <div className="ConnectorGenerate">
-    <header>
+    <div class="header">
       <h1>Connector Code Generation</h1>
-    </header>
+    </div>
+
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/info/openAi/validate">Documentation Validate</a>
+        <a href="/info/openAi/generate">Documentation Generate</a>
+        <a href="/connector/openAi/generate">Connector Generate</a>
+        <a href="/generated/list">List Of Documentations</a>
+
+      </div>
+
     <form onSubmit={handleSubmit} encType="multipart/form-data">
       <label htmlFor="systemName"></label>
       <p>System Name:<input type="text" id="systemName" name="name" /></p>
