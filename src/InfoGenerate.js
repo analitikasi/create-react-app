@@ -8,7 +8,7 @@ function TableVal({ data }) {
   return (
     <div>
     <h2>Download File</h2>
-      <form action={`http://localhost:8080/file/documentation/${data.name}`} method = "get">
+      <form action={`http://localhost:8080/api/v1/file/documentation/${data.name}`} method = "get">
       <button className="button" type="submit">Download File</button>
     </form>
     <table>
@@ -51,7 +51,7 @@ function InfoGenerate() {
     event.preventDefault();
     setIsLoading(true); // Set isLoading to true when the request starts
 
-    const response = await fetch(`http://localhost:8080/api/v1/provider/info/openAi/generate?name=${name}&validate=${validate}`);
+    const response = await fetch(`http://localhost:8080/api/v1/generate/documentation/openAi?name=${name}&validate=${validate}`);
     const jsonData = await response.json();
     setData(jsonData);
     console.log(jsonData)
@@ -62,9 +62,19 @@ function InfoGenerate() {
 
   return (
     <div className="InfoGenerate">
-      <header>
+      <div class="header">
         <h1>Provider Documentation Generation</h1>
-      </header>
+      </div>
+
+      <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/info/openAi/validate">Documentation Validate</a>
+        <a href="/info/openAi/generate">Documentation Generate</a>
+        <a href="/connector/openAi/generate">Connector Generate</a>
+        <a href="/generated/list">List Of Documentations</a>
+
+      </div>
+
       <form onSubmit={(e) => e.preventDefault()}>
         <label htmlFor="systemName"></label>
         <p>System Name:<input type="text" id="systemName" name="name" value={name} onChange={(e) => setName(e.target.value)} /></p>
