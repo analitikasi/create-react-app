@@ -26,31 +26,47 @@ function GetDocumentation() {
                 <a href="/connector/openAi/generate">Connector Generate</a>
                 <a href="/generated/list">List Of Documentations</a>
             </div>
+
+
             {data == null ? "No data" : (
-                <div> 
-                    {data.map((item, index) => (
+                <div>
+                    {data.documentation.map((item, index) => (
                         <div key={index}>
-                            <h1>{item.ProviderName}</h1>
-                            <h2>Model {item.LLMModel}</h2>
-                            <form action={`http://localhost:8080/api/v1/file/documentation/${item.ProviderName}`} method = "get">
-                                <button className="button" type="submit">Download File</button>
-                            </form>
+                            <h1>{item.provider_name}</h1>
+                            <h2>Model {item.llm_model}</h2>
                             <table>
                                 <thead>
                                     <tr>
                                         <th>Section</th>
                                         <th>Generation</th>
+                                        {item.is_validated && (
+                                            <>
+                                                <th>Validation</th>
+                                                <th>Link Validation </th>
+                                            </>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.entries(item.Text).map(([section, generation]) => (
+                                    {Object.keys(item.doc).map((section) => (
                                         <tr key={section}>
                                              <td>{section}</td>
-                                            <td>{generation}</td>
+                                            <td>{item.doc[section]}</td>
+                                            {item.is_validated && (
+                                                <React.Fragment>
+                                                    <td>{item.validation[section].section_validation.validating_info}</td>
+                                                    <td>{item.validation[section].links_validation.map((link, index) => (
+                                                        <div key={index}>
+                                                            <p>{link.link_info}</p>
+                                                        </div>
+                                                    ))}</td>
+                                                </React.Fragment>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
+
                         </div>
                     ))}
                 </div>
