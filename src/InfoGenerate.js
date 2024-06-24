@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import './App.css';
 
 function TableVal({ data }) {
-  const isValidationIncluded = Object.prototype.hasOwnProperty.call(data, 'generation_and_validation');
-
-
   return (
     <div>
     <h2>Download File</h2>
-      <form action={`http://localhost:8080/api/v1/file/documentation/${data.name}`} method = "get">
+      <form action={`http://dev.sysintit.kz:8080/api/v1/file/documentation/${data.name}`} method = "get">
       <button className="button" type="submit">Download File</button>
     </form>
     <table>
@@ -16,17 +13,17 @@ function TableVal({ data }) {
         <tr>
           <th>Section</th>
           <th>Generation</th>
-          {isValidationIncluded && <th>Section Content Validation</th>}
-          {isValidationIncluded && <th>Section Link Validation</th>}
+          {data.is_validated && <th>Section Content Validation</th>}
+          {data.is_validated && <th>Section Link Validation</th>}
         </tr>
       </thead>
       <tbody>
-        {Object.entries(isValidationIncluded ? data.generation_and_validation : data.generation).map(([section, content]) => (
+        {Object.entries(data.sections).map(([section, content]) => (
           <tr key={section}>
             <td>{section}</td>
-            <td>{isValidationIncluded ? content.generation : content}</td>
-            {isValidationIncluded && <td>{content.validation.section_validation.validating_info}</td>}
-            {isValidationIncluded &&  <td>
+            <td>{content.generation}</td>
+            {data.is_validated && <td>{content.validation.section_validation.validating_info}</td>}
+            {data.is_validated &&  <td>
               {content.validation.links_validation.map((link, index) => (
                 <p key={index} style={{color: link.is_valid ? 'green' : 'red'}}>
                   {link.link_info}
@@ -51,7 +48,7 @@ function InfoGenerate() {
     event.preventDefault();
     setIsLoading(true); // Set isLoading to true when the request starts
 
-    const response = await fetch(`http://localhost:8080/api/v1/generate/documentation/openAi?name=${name}&validate=${validate}`);
+    const response = await fetch(`http://dev.sysintit.kz:8080/api/v1/generate/documentation/openAi?name=${name}&validate=${validate}`);
     const jsonData = await response.json();
     setData(jsonData);
     console.log(jsonData)

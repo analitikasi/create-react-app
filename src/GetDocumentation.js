@@ -5,7 +5,7 @@ function GetDocumentation() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/documentation', {
+        fetch('http://dev.sysintit.kz:8080/api/v1/documentation', {
             method: 'GET',
         })
         .then(response => response.json())
