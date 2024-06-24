@@ -39,7 +39,7 @@ function InfoValidate() {
     setIsLoading(true); // Set isLoading to true when the request starts
 
     const formData = new FormData(event.target);
-    const response = await fetch('http://dev.sysintit.kz:3000/api/v1/validate/documentation/openAi', {
+    const response = await fetch('http://dev.sysintit.kz:8080/api/v1/validate/documentation/openAi', {
       method: 'POST',
       body: formData
     })
