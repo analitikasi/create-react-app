@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+
 function GetDocumentation() {
     const [data, setData] = useState(null);
 
@@ -12,6 +13,22 @@ function GetDocumentation() {
         .then(jsonData => setData(jsonData))
         .catch(error => console.error('Error:', error));
     }, []);
+
+    function handleDelete(providerName) {
+        fetch(`http://dev.sysintit.kz:8080/api/v1/documentation/${providerName}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // After a successful delete operation, re-fetch the data
+            return fetch('http://dev.sysintit.kz:8080/api/v1/documentation');
+        })
+        .then(response => response.json())
+        .then(jsonData => setData(jsonData))
+        .catch(error => console.error('Error:', error));
+    }
 
     return (
         <div>
@@ -34,6 +51,10 @@ function GetDocumentation() {
                         <div key={index}>
                             <h1>{item.provider_name}</h1>
                             <h2>Model {item.llm_model}</h2>
+                            <form action={`http://dev.sysintit.kz:8080/api/v1/file/documentation/${item.provider_name}`} method = "get">
+                                <button className="button" type="submit">Download File</button>
+                            </form>
+                            <button className="button" onClick={() => handleDelete(item.provider_name)}>Delete Provider Info</button>
                             <table>
                                 <thead>
                                     <tr>
