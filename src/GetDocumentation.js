@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+
 function GetDocumentation() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/documentation', {
+        fetch('http://dev.sysintit.kz:8080/api/v1/documentation', {
             method: 'GET',
         })
         .then(response => response.json())
         .then(jsonData => setData(jsonData))
         .catch(error => console.error('Error:', error));
     }, []);
+
+    function handleDelete(providerName) {
+        fetch(`http://dev.sysintit.kz:8080/api/v1/documentation/${providerName}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // After a successful delete operation, re-fetch the data
+            return fetch('http://dev.sysintit.kz:8080/api/v1/documentation');
+        })
+        .then(response => response.json())
+        .then(jsonData => setData(jsonData))
+        .catch(error => console.error('Error:', error));
+    }
 
     return (
         <div>
@@ -26,31 +43,51 @@ function GetDocumentation() {
                 <a href="/connector/openAi/generate">Connector Generate</a>
                 <a href="/generated/list">List Of Documentations</a>
             </div>
+
+
             {data == null ? "No data" : (
-                <div> 
-                    {data.map((item, index) => (
+                <div>
+                    {data.documentation.map((item, index) => (
                         <div key={index}>
-                            <h1>{item.ProviderName}</h1>
-                            <h2>Model {item.LLMModel}</h2>
-                            <form action={`http://localhost:8080/api/v1/file/documentation/${item.ProviderName}`} method = "get">
+                            <h1>{item.provider_name}</h1>
+                            <h2>Model {item.llm_model}</h2>
+                            <form action={`http://dev.sysintit.kz:8080/api/v1/file/documentation/${item.provider_name}`} method = "get">
                                 <button className="button" type="submit">Download File</button>
                             </form>
+                            <button className="button" onClick={() => handleDelete(item.provider_name)}>Delete Provider Info</button>
                             <table>
                                 <thead>
                                     <tr>
                                         <th>Section</th>
                                         <th>Generation</th>
+                                        {item.is_validated && (
+                                            <>
+                                                <th>Validation</th>
+                                                <th>Link Validation </th>
+                                            </>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.entries(item.Text).map(([section, generation]) => (
+                                    {Object.keys(item.doc).map((section) => (
                                         <tr key={section}>
                                              <td>{section}</td>
-                                            <td>{generation}</td>
+                                            <td>{item.doc[section]}</td>
+                                            {item.is_validated && (
+                                                <React.Fragment>
+                                                    <td>{item.validation[section].section_validation.validating_info}</td>
+                                                    <td>{item.validation[section].links_validation.map((link, index) => (
+                                                        <div key={index}>
+                                                            <p>{link.link_info}</p>
+                                                        </div>
+                                                    ))}</td>
+                                                </React.Fragment>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
+
                         </div>
                     ))}
                 </div>

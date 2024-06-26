@@ -12,7 +12,7 @@ function TableVal({ data }) {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(data.validation).map(([section, validation]) => (
+        {Object.entries(data.sections).map(([section, validation]) => (
           <tr key={section}>
             <td>{section}</td>
             <td>{validation.section_validation.validating_info}</td>
@@ -39,7 +39,7 @@ function InfoValidate() {
     setIsLoading(true); // Set isLoading to true when the request starts
 
     const formData = new FormData(event.target);
-    const response = await fetch('http://localhost:8080/api/v1/validate/documentation/openAi', {
+    const response = await fetch('http://dev.sysintit.kz:8080/api/v1/validate/documentation/openAi', {
       method: 'POST',
       body: formData
     })

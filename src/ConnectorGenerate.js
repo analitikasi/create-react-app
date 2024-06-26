@@ -4,7 +4,7 @@ function ConnectorCode({ data }) {
   return (
     <div>
       <h2>Download Code</h2>
-      <form action={`http://localhost:8080/api/v1/file/code/${data.name}`} method = "get">
+      <form action={`http://dev.sysintit.kz:8080/api/v1/file/code/${data.name}`} method = "get">
         <button className="button" type="submit">Download Code</button>
       </form>
 
@@ -26,7 +26,7 @@ function ConnectorGenerate() {
     setIsLoading(true)
 
     const formData = new FormData(event.target);
-    const response = await fetch('http://localhost:8080/api/v1/generate/code/openAi', {
+    const response = await fetch('http://dev.sysintit.kz:8080/api/v1/generate/code/openAi', {
       method: 'POST',
       body: formData
     })
